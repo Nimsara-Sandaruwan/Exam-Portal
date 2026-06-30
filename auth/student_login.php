@@ -54,9 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-card">
         <div class="text-center mb-4">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="#1e3c72">
-                <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99z"/>
-                <circle cx="12" cy="16" r="1"/>
-                <path d="M11 10h2v4h-2z"/>
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v1.2h19.2v-1.2c0-3.2-6.4-4.8-9.6-4.8z"/>
             </svg>
             <h3>Student Login</h3>
             <p class="text-muted">Enter your credentials to access your results</p>
