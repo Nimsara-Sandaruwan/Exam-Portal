@@ -166,18 +166,8 @@ $allSubjects = $subjAll->fetchAll();
     <title>Manage Results – Institute of Higher Technology</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
-        .btn svg {
-            width: 18px;
-            height: 18px;
-            vertical-align: middle;
-            margin-right: 5px;
-            fill: currentColor;
-        }
-        .icon-btn svg {
-            width: 16px;
-            height: 16px;
-            vertical-align: middle;
-        }
+        .btn svg { width: 18px; height: 18px; vertical-align: middle; margin-right: 5px; fill: currentColor; }
+        .icon-btn svg { width: 16px; height: 16px; vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -381,38 +371,58 @@ $allSubjects = $subjAll->fetchAll();
     </div>
 </div>
 
-<!-- Dynamic subject loading (CLIENT SIDE) – same logic, no Bootstrap -->
+<!-- Dynamic subject loading (CLIENT SIDE) – corrected -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+// Pass PHP array to JavaScript
+var allSubjectsData = <?= json_encode($allSubjects) ?>;
+
+// Run immediately – DOM is ready because script is at bottom of <body>
+(function() {
     const yearOfStudySelect = document.getElementById('year_of_study');
     const semSelect         = document.getElementById('semester');
     const subjectDrop       = document.getElementById('subject_id');
-    const allSubjects       = <?= json_encode($allSubjects) ?>;
+
+    if (!yearOfStudySelect || !semSelect || !subjectDrop) return;
+
+    console.log('All subjects:', allSubjectsData);
 
     function filterSubjects() {
         const yearOfStudy = yearOfStudySelect.value;
         const sem = semSelect.value;
+        console.log('Filtering for Year:', yearOfStudy, 'Semester:', sem);
+
         subjectDrop.innerHTML = '<option value="">-- Select Subject --</option>';
         if (!yearOfStudy || !sem) return;
 
-        allSubjects.forEach(subj => {
-            if (subj.year_of_study == yearOfStudy && subj.semester == sem) {
-                const opt = document.createElement('option');
-                opt.value = subj.subject_id;
-                opt.textContent = subj.subject_code + ' - ' + subj.subject_name;
-                subjectDrop.appendChild(opt);
-            }
+        const filtered = allSubjectsData.filter(function(subj) {
+            return subj.year_of_study == yearOfStudy && subj.semester == sem;
         });
+        console.log('Filtered subjects:', filtered);
+
+        filtered.forEach(function(subj) {
+            var opt = document.createElement('option');
+            opt.value = subj.subject_id;
+            opt.textContent = subj.subject_code + ' - ' + subj.subject_name;
+            subjectDrop.appendChild(opt);
+        });
+
+        if (filtered.length === 0) {
+            var opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = 'No subjects found for this selection';
+            opt.disabled = true;
+            subjectDrop.appendChild(opt);
+        }
     }
 
-    if (yearOfStudySelect && semSelect && subjectDrop) {
-        yearOfStudySelect.addEventListener('change', filterSubjects);
-        semSelect.addEventListener('change', filterSubjects);
-        <?php if (isset($editResult)): ?>
-            filterSubjects();
-        <?php endif; ?>
-    }
-});
+    yearOfStudySelect.addEventListener('change', filterSubjects);
+    semSelect.addEventListener('change', filterSubjects);
+
+    // If editing, pre‑filter immediately
+    <?php if (isset($editResult)): ?>
+        filterSubjects();
+    <?php endif; ?>
+})();
 </script>
 <script src="../assets/js/script.js"></script>
 </body>
