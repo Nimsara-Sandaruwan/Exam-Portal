@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_result'])) {
         $gradeInfo = computeGrade($marks);
         $grade     = $gradeInfo['grade'];
         $gp        = $gradeInfo['gp'];
-        $passFail  = ($grade == 'F') ? 'Fail' : 'Pass';
+        $passFail  = ($grade == 'I(SE)') ? 'Fail' : 'Pass';
 
         if ($result_id_post) {
             // UPDATE

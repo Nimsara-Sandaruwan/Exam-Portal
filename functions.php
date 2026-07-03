@@ -5,12 +5,6 @@
 /**
  * Generate a unique registration number in the format:
  * TAN/DeptCode/AcademicYear/StudyMode/0001
- *
- * @param PDO    $pdo           Active database connection
- * @param string $dept_code     e.g. 'IT', 'AC', 'EN'
- * @param int    $academic_year e.g. 2023
- * @param string $study_mode    'F' or 'P'
- * @return string               Full registration number
  */
 function generateRegNo($pdo, $dept_code, $academic_year, $study_mode) {
     $prefix = "TAN/$dept_code/$academic_year/$study_mode/";
@@ -28,44 +22,41 @@ function generateRegNo($pdo, $dept_code, $academic_year, $study_mode) {
 
 /**
  * Compute grade and grade point based on marks.
- * Adjust the thresholds to match your institute's grading policy.
- *
- * @param float $marks
- * @return array  ['grade' => string, 'gp' => float]
+ * Official SLIATE grading – no D+, D, or F; fail = I(SE)
  */
 function computeGrade($marks) {
-    if ($marks >= 85) return ['grade' => 'A+', 'gp' => 4.0];
-    if ($marks >= 75) return ['grade' => 'A',  'gp' => 4.0];
-    if ($marks >= 70) return ['grade' => 'A-', 'gp' => 3.7];
-    if ($marks >= 65) return ['grade' => 'B+', 'gp' => 3.3];
-    if ($marks >= 60) return ['grade' => 'B',  'gp' => 3.0];
-    if ($marks >= 55) return ['grade' => 'B-', 'gp' => 2.7];
-    if ($marks >= 50) return ['grade' => 'C+', 'gp' => 2.3];
-    if ($marks >= 45) return ['grade' => 'C',  'gp' => 2.0];
-    if ($marks >= 40) return ['grade' => 'C-', 'gp' => 1.7];
-    if ($marks >= 35) return ['grade' => 'D+', 'gp' => 1.3];
-    if ($marks >= 30) return ['grade' => 'D',  'gp' => 1.0];
-    return ['grade' => 'F',  'gp' => 0.0];
+    if ($marks >= 85) return ['grade' => 'A+',   'gp' => 4.0];
+    if ($marks >= 75) return ['grade' => 'A',    'gp' => 4.0];
+    if ($marks >= 70) return ['grade' => 'A-',   'gp' => 3.7];
+    if ($marks >= 65) return ['grade' => 'B+',   'gp' => 3.3];
+    if ($marks >= 60) return ['grade' => 'B',    'gp' => 3.0];
+    if ($marks >= 55) return ['grade' => 'B-',   'gp' => 2.7];
+    if ($marks >= 50) return ['grade' => 'C+',   'gp' => 2.3];
+    if ($marks >= 45) return ['grade' => 'C',    'gp' => 2.0];
+    if ($marks >= 40) return ['grade' => 'C-',   'gp' => 1.7];
+    // Below 40 = fail (I(SE))
+    return ['grade' => 'I(SE)', 'gp' => 0.0];
 }
 
 /**
- * Calculate the GPA for a specific student in a given academic year and semester.
- * GPA = average of grade points for all subjects in that semester.
- *
- * @param PDO $pdo
- * @param int $student_id
- * @param int $academic_year
- * @param int $semester
- * @return float  GPA rounded to 2 decimal places
+ * Calculate semester GPA – credit‑weighted formula:
+ * GPA = Σ (credits × grade_point) / Σ credits
  */
 function calculateSemesterGPA($pdo, $student_id, $academic_year, $semester) {
-    $stmt = $pdo->prepare(
-        "SELECT AVG(grade_point) AS gpa
-         FROM results
-         WHERE student_id = ? AND academic_year = ? AND semester = ?"
-    );
+    $stmt = $pdo->prepare("
+        SELECT SUM(sub.credits * r.grade_point) AS weighted_sum,
+               SUM(sub.credits) AS total_credits
+        FROM results r
+        JOIN subjects sub ON r.subject_id = sub.subject_id
+        WHERE r.student_id = ?
+          AND r.academic_year = ?
+          AND r.semester = ?
+    ");
     $stmt->execute([$student_id, $academic_year, $semester]);
-    $gpa = $stmt->fetchColumn();
-    return round($gpa, 2);
+    $row = $stmt->fetch();
+    if ($row && $row['total_credits'] > 0) {
+        return round($row['weighted_sum'] / $row['total_credits'], 2);
+    }
+    return 0.00;
 }
 ?>
