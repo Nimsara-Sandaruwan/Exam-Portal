@@ -4,6 +4,7 @@ session_start();
 require_once '../config/db.php';
 require_once '../functions.php';
 
+// Redirect if not logged in
 if (!isset($_SESSION['student_id'])) {
     header('Location: ../index.php');
     exit;
@@ -42,17 +43,18 @@ if ($latest) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard – Institute of Higher Technology</title>
+    <title>Student Dashboard – SLIATE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
 <div class="d-flex">
     <?php include '../includes/student_sidebar.php'; ?>
 
-    <div class="main-content w-100">
-        <h2 class="mb-4">Dashboard</h2>
+    <div class="main-content">
+        <h2><i class="fas fa-th-large"></i> Dashboard</h2>
 
-        <div class="dashboard-card">
+        <div class="dashboard-card mt-3">
             <div class="row" style="align-items: center;">
                 <div class="col-3 col-sm-12 text-center">
                     <img
@@ -62,8 +64,8 @@ if ($latest) {
                     >
                 </div>
                 <div class="col-9 col-sm-12">
-                    <h4 class="mb-3"><?= htmlspecialchars($student['full_name']) ?></h4>
-                    <table class="mb-0" style="width:100%;">
+                    <h4><?= htmlspecialchars($student['full_name']) ?></h4>
+                    <table class="mb-0" style="width:100%; margin-top:16px;">
                         <tr>
                             <td><strong>Registration No:</strong></td>
                             <td><?= htmlspecialchars($student['reg_no']) ?></td>
@@ -87,7 +89,7 @@ if ($latest) {
                         </tr>
                         <tr>
                             <td><strong>Semester GPA:</strong></td>
-                            <td><span class="badge badge-primary"><?= $current_gpa ?></span></td>
+                            <td><span class="badge badge-primary" style="font-size:1rem;"><?= $current_gpa ?></span></td>
                         </tr>
                         <?php else: ?>
                         <tr>

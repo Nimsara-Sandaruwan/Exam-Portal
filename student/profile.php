@@ -95,34 +95,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_picture'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile – Institute of Higher Technology</title>
+    <title>My Profile – SLIATE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <style>
-        /* Small additional styles for icon alignment */
-        .icon-left { width: 20px; height: 20px; vertical-align: middle; margin-right: 8px; fill: currentColor; }
-    </style>
 </head>
 <body>
 <div class="d-flex">
     <?php include '../includes/student_sidebar.php'; ?>
 
     <div class="main-content w-100">
-        <h2 class="mb-4">My Profile</h2>
+        <h2><i class="fas fa-user-circle"></i> My Profile</h2>
 
         <?php if ($error): ?>
             <div class="alert alert-danger alert-dismissible">
-                <?= htmlspecialchars($error) ?>
+                <i class="fas fa-exclamation-triangle"></i> <?= htmlspecialchars($error) ?>
                 <button class="alert-close" onclick="this.parentElement.remove()">×</button>
             </div>
         <?php endif; ?>
         <?php if ($success): ?>
             <div class="alert alert-success alert-dismissible">
-                <?= htmlspecialchars($success) ?>
+                <i class="fas fa-check-circle"></i> <?= htmlspecialchars($success) ?>
                 <button class="alert-close" onclick="this.parentElement.remove()">×</button>
             </div>
         <?php endif; ?>
 
-        <div class="row">
+        <div class="row mt-3">
             <!-- Left: Picture & basic info -->
             <div class="col-4 col-sm-12">
                 <div class="dashboard-card text-center">
@@ -140,10 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_picture'])) {
             <div class="col-8 col-sm-12">
                 <!-- Change Password Card -->
                 <div class="dashboard-card mb-4">
-                    <h5>
-                        <svg class="icon-left" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
-                        Change Password
-                    </h5>
+                    <h5><i class="fas fa-key"></i> Change Password</h5>
                     <form method="POST" action="">
                         <input type="hidden" name="change_password" value="1">
                         <div class="form-group">
@@ -164,10 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_picture'])) {
 
                 <!-- Change Profile Picture Card -->
                 <div class="dashboard-card">
-                    <h5>
-                        <svg class="icon-left" viewBox="0 0 24 24"><path d="M12 15.2c1.77 0 3.2-1.43 3.2-3.2s-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2 1.43 3.2 3.2 3.2zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
-                        Change Profile Picture
-                    </h5>
+                    <h5><i class="fas fa-camera"></i> Change Profile Picture</h5>
                     <form method="POST" action="" enctype="multipart/form-data">
                         <input type="hidden" name="upload_picture" value="1">
                         <div class="form-group">
