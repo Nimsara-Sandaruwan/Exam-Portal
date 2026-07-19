@@ -12,51 +12,45 @@ if (!isset($_SESSION['student_id'])) {
 // Retrieve student's name from session for display
 $studentName = isset($_SESSION['student_name']) ? htmlspecialchars($_SESSION['student_name']) : 'Student';
 ?>
-<!-- Inline SVG Icons -->
-<svg style="display:none;">
-    <symbol id="icon-dashboard" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></symbol>
-    <symbol id="icon-result" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></symbol>
-    <symbol id="icon-profile" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v1.2h19.2v-1.2c0-3.2-6.4-4.8-9.6-4.8z"/></symbol>
-    <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></symbol>
-</svg>
 
 <!-- Sidebar -->
-<div class="sidebar">
-    <!-- Brand / Logo area -->
-    <div class="brand">
-        <h4>Institute Portal</h4>
-        <small>Student Panel</small>
+<div class="sidebar" id="sidebar">
+    <!-- Brand -->
+    <div class="sidebar-brand">
+        <i class="fas fa-graduation-cap"></i>
+        <h4>SLIATE</h4>
+        <small>Student Portal</small>
     </div>
 
-    <!-- Profile summary -->
-    <div class="user-info">
-        <div>Welcome,</div>
-        <div class="name"><?= $studentName ?></div>
+    <!-- User Info -->
+    <div class="sidebar-user">
+        <div class="user-avatar"><?= strtoupper(substr($studentName, 0, 1)) ?></div>
+        <div class="user-name"><?= $studentName ?></div>
     </div>
 
-    <!-- Navigation links -->
-    <ul class="nav">
+    <!-- Navigation Links -->
+    <ul class="sidebar-nav">
         <li>
             <a href="dashboard.php">
-                <svg width="20" height="20"><use href="#icon-dashboard"/></svg> Dashboard
+                <i class="fas fa-th-large"></i> Dashboard
             </a>
         </li>
         <li>
             <a href="result.php">
-                <svg width="20" height="20"><use href="#icon-result"/></svg> Result
+                <i class="fas fa-file-alt"></i> Results
             </a>
         </li>
         <li>
             <a href="profile.php">
-                <svg width="20" height="20"><use href="#icon-profile"/></svg> Profile
+                <i class="fas fa-user-circle"></i> Profile
             </a>
         </li>
     </ul>
 
-    <!-- Logout at the bottom -->
-    <div class="logout">
+    <!-- Logout -->
+    <div class="sidebar-footer">
         <a href="../auth/logout.php">
-            <svg width="20" height="20"><use href="#icon-logout"/></svg> Logout
+            <i class="fas fa-sign-out-alt"></i> Logout
         </a>
     </div>
 </div>
