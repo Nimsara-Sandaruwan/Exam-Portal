@@ -89,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_student'])) {
                 $insStmt = $pdo->prepare("INSERT INTO students (reg_no, password_hash, full_name, address, phone, dob, academic_year, study_mode, dept_id)
                                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 $insStmt->execute([$reg_no, $hashed, $full_name, $address, $phone, $dob, $academic_year, $study_mode, $dept_id]);
-                $new_id = $pdo->lastInsertId();
                 $success = "Student added successfully. Registration Number: <strong>$reg_no</strong>";
             }
         }
@@ -146,30 +145,17 @@ if ($action === 'edit' && $edit_id) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Students – Institute of Higher Technology</title>
+    <title>Manage Students – SLIATE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <style>
-        .btn svg {
-            width: 18px;
-            height: 18px;
-            vertical-align: middle;
-            margin-right: 5px;
-            fill: currentColor;
-        }
-        .icon-btn svg {
-            width: 16px;
-            height: 16px;
-            vertical-align: middle;
-        }
-    </style>
 </head>
 <body>
 <div class="d-flex">
     <?php include '../includes/admin_sidebar.php'; ?>
 
     <div class="main-content w-100">
-        <h2 class="mb-3">
-            <?= ($action === 'add' || $action === 'edit') ? ($action === 'add' ? 'Add New Student' : 'Edit Student') : 'Manage Students' ?>
+        <h2>
+            <?= ($action === 'add' || $action === 'edit') ? ($action === 'add' ? '<i class="fas fa-user-plus"></i> Add New Student' : '<i class="fas fa-user-edit"></i> Edit Student') : '<i class="fas fa-users"></i> Manage Students' ?>
         </h2>
 
         <?php if ($error): ?>
@@ -233,15 +219,14 @@ if ($action === 'edit' && $edit_id) {
                         </div>
                     </div>
                     <button type="submit" name="save_student" class="btn btn-primary">
-                        <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
-                        <?= $editStudent ? 'Update Student' : 'Add Student' ?>
+                        <i class="fas fa-save"></i> <?= $editStudent ? 'Update Student' : 'Add Student' ?>
                     </button>
-                    <a href="students.php" class="btn btn-secondary" style="margin-left:10px;">Cancel</a>
+                    <a href="students.php" class="btn btn-outline" style="margin-left:10px;">Cancel</a>
                 </form>
             </div>
         <?php else: ?>
             <!-- ============= FILTER & STUDENT LIST ============= -->
-            <div class="filter-box mb-3">
+            <div class="filter-box mb-3" style="background:white; border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow);">
                 <form method="get" action="students.php" class="row g-2">
                     <div class="col-4 col-sm-12 mb-2">
                         <input type="text" name="search_name" class="form-control" placeholder="Search by name" value="<?= htmlspecialchars($filter_name) ?>">
@@ -262,18 +247,14 @@ if ($action === 'edit' && $edit_id) {
                         </select>
                     </div>
                     <div class="col-2 col-sm-12 mb-2">
-                        <button type="submit" class="btn btn-outline-primary w-100">
-                            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg> Filter
-                        </button>
+                        <button type="submit" class="btn btn-outline w-100"><i class="fas fa-filter"></i> Filter</button>
                     </div>
                 </form>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-3" style="flex-wrap: wrap; gap: 10px;">
-                <a href="students.php?action=add" class="btn btn-primary">
-                    <svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> Add Student
-                </a>
-                <a href="students.php" class="btn btn-outline-secondary">Clear Filters</a>
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <a href="students.php?action=add" class="btn btn-primary"><i class="fas fa-user-plus"></i> Add Student</a>
+                <a href="students.php" class="btn btn-outline">Clear Filters</a>
             </div>
 
             <div class="table-container dashboard-card">
@@ -298,12 +279,8 @@ if ($action === 'edit' && $edit_id) {
                                     <td><?= $s['study_mode'] == 'F' ? 'Full-Time' : 'Part-Time' ?></td>
                                     <td><?= htmlspecialchars($s['phone']) ?></td>
                                     <td class="text-center">
-                                        <a href="students.php?action=edit&id=<?= $s['student_id'] ?>" class="btn btn-sm btn-outline-info btn-action" title="Edit">
-                                            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                                        </a>
-                                        <a href="students.php?action=delete&id=<?= $s['student_id'] ?>" class="btn btn-sm btn-outline-danger btn-action confirm-delete" title="Delete">
-                                            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                                        </a>
+                                        <a href="students.php?action=edit&id=<?= $s['student_id'] ?>" class="btn btn-sm btn-outline" title="Edit"><i class="fas fa-edit"></i></a>
+                                        <a href="students.php?action=delete&id=<?= $s['student_id'] ?>" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete"><i class="fas fa-trash"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

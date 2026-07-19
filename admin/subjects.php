@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_subject'])) {
                     header("Location: subjects.php?msg=updated");
                     exit;
                 } catch (PDOException $e) {
-                    if ($e->getCode() == 23000) {
+                    if ($e->getCode() == 23000) { // Duplicate entry
                         $error = "Subject code already exists in this department.";
                     } else {
                         $error = "Database error.";
@@ -138,30 +138,17 @@ $subjects = $listStmt->fetchAll();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Subjects – Institute of Higher Technology</title>
+    <title>Manage Subjects – SLIATE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <style>
-        .btn svg {
-            width: 18px;
-            height: 18px;
-            vertical-align: middle;
-            margin-right: 5px;
-            fill: currentColor;
-        }
-        .icon-btn svg {
-            width: 16px;
-            height: 16px;
-            vertical-align: middle;
-        }
-    </style>
 </head>
 <body>
 <div class="d-flex">
     <?php include '../includes/admin_sidebar.php'; ?>
 
     <div class="main-content w-100">
-        <h2 class="mb-3">
-            <?= ($action === 'add' || $action === 'edit') ? ($action === 'add' ? 'Add New Subject' : 'Edit Subject') : 'Manage Subjects' ?>
+        <h2>
+            <?= ($action === 'add' || $action === 'edit') ? ($action === 'add' ? '<i class="fas fa-plus-circle"></i> Add New Subject' : '<i class="fas fa-edit"></i> Edit Subject') : '<i class="fas fa-book"></i> Manage Subjects' ?>
         </h2>
 
         <?php if ($error): ?>
@@ -213,15 +200,14 @@ $subjects = $listStmt->fetchAll();
                         </div>
                     </div>
                     <button type="submit" name="save_subject" class="btn btn-primary">
-                        <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
-                        <?= $editSubject ? 'Update Subject' : 'Add Subject' ?>
+                        <i class="fas fa-save"></i> <?= $editSubject ? 'Update Subject' : 'Add Subject' ?>
                     </button>
-                    <a href="subjects.php" class="btn btn-secondary" style="margin-left:10px;">Cancel</a>
+                    <a href="subjects.php" class="btn btn-outline" style="margin-left:10px;">Cancel</a>
                 </form>
             </div>
         <?php else: ?>
             <!-- ==================== FILTER & LIST ==================== -->
-            <div class="filter-box mb-3">
+            <div class="filter-box mb-3" style="background:white; border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow);">
                 <form method="get" action="subjects.php" class="row g-2">
                     <div class="col-3 col-sm-12 mb-2">
                         <input type="text" name="search" class="form-control" placeholder="Search code or name" value="<?= htmlspecialchars($search) ?>">
@@ -242,18 +228,14 @@ $subjects = $listStmt->fetchAll();
                         </select>
                     </div>
                     <div class="col-2 col-sm-12 mb-2">
-                        <button type="submit" class="btn btn-outline-primary w-100">
-                            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg> Filter
-                        </button>
+                        <button type="submit" class="btn btn-outline w-100"><i class="fas fa-filter"></i> Filter</button>
                     </div>
                 </form>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-3" style="flex-wrap: wrap; gap: 10px;">
-                <a href="subjects.php?action=add" class="btn btn-primary">
-                    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Add Subject
-                </a>
-                <a href="subjects.php" class="btn btn-outline-secondary">Clear Filters</a>
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <a href="subjects.php?action=add" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add Subject</a>
+                <a href="subjects.php" class="btn btn-outline">Clear Filters</a>
             </div>
 
             <div class="table-container dashboard-card">
@@ -276,12 +258,8 @@ $subjects = $listStmt->fetchAll();
                                     <td><?= $subj['year_of_study'] ?></td>
                                     <td><?= $subj['semester'] ?></td>
                                     <td class="text-center">
-                                        <a href="subjects.php?action=edit&id=<?= $subj['subject_id'] ?>" class="btn btn-sm btn-outline-info btn-action" title="Edit">
-                                            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                                        </a>
-                                        <a href="subjects.php?action=delete&id=<?= $subj['subject_id'] ?>" class="btn btn-sm btn-outline-danger btn-action confirm-delete" title="Delete">
-                                            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                                        </a>
+                                        <a href="subjects.php?action=edit&id=<?= $subj['subject_id'] ?>" class="btn btn-sm btn-outline" title="Edit"><i class="fas fa-edit"></i></a>
+                                        <a href="subjects.php?action=delete&id=<?= $subj['subject_id'] ?>" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete"><i class="fas fa-trash"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

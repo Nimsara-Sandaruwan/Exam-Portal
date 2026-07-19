@@ -56,27 +56,19 @@ $allSubjects = $subjStmt->fetchAll();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Reports – Institute of Higher Technology</title>
+    <title>Reports – SLIATE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <style>
-        .btn svg {
-            width: 18px;
-            height: 18px;
-            vertical-align: middle;
-            margin-right: 5px;
-            fill: currentColor;
-        }
-    </style>
 </head>
 <body>
 <div class="d-flex">
     <?php include '../includes/admin_sidebar.php'; ?>
 
     <div class="main-content w-100">
-        <h2 class="mb-3">Exam Reports</h2>
+        <h2><i class="fas fa-file-pdf"></i> Exam Reports</h2>
 
         <!-- Filter Card -->
-        <div class="filter-box mb-3">
+        <div class="filter-box mb-3" style="background:white; border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow);">
             <form method="get" action="reports.php" class="row g-2">
                 <div class="col-3 col-sm-12 mb-2">
                     <select name="filter_year" class="form-select">
@@ -103,21 +95,19 @@ $allSubjects = $subjStmt->fetchAll();
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="col-2 col-sm-12 mb-2 d-flex" style="gap: 10px;">
-                    <button type="submit" class="btn btn-outline-primary flex-fill">
-                        <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg> Filter
-                    </button>
-                    <a href="reports.php" class="btn btn-outline-secondary flex-fill">Clear</a>
+                <div class="col-2 col-sm-12 mb-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-outline flex-fill"><i class="fas fa-filter"></i> Filter</button>
+                    <a href="reports.php" class="btn btn-outline flex-fill">Clear</a>
                 </div>
             </form>
         </div>
 
         <!-- Action bar -->
-        <div class="d-flex justify-content-between align-items-center mb-3" style="flex-wrap: wrap; gap: 10px;">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
             <div>
                 <?php if (count($results) > 0): ?>
-                    <a href="download_report_pdf.php?<?= http_build_query($_GET) ?>" class="btn btn-success">
-                        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg> Download PDF
+                    <a href="download_report_pdf.php?<?= http_build_query($_GET) ?>" class="btn btn-accent">
+                        <i class="fas fa-file-pdf"></i> Download PDF
                     </a>
                 <?php endif; ?>
             </div>
@@ -149,12 +139,12 @@ $allSubjects = $subjStmt->fetchAll();
                                 <td><?= $r['academic_year'] ?></td>
                                 <td><?= $r['semester'] ?></td>
                                 <td><?= $r['marks'] ?></td>
-                                <td><span class="badge badge-secondary"><?= $r['grade'] ?></span></td>
+                                <td><span class="badge badge-primary"><?= $r['grade'] ?></span></td>
                                 <td>
                                     <?php if ($r['pass_fail'] == 'Pass'): ?>
-                                        <span class="badge badge-success">Pass</span>
+                                        <span class="badge pass-badge">Pass</span>
                                     <?php else: ?>
-                                        <span class="badge badge-danger">Fail</span>
+                                        <span class="badge fail-badge">Fail</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>

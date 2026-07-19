@@ -163,20 +163,17 @@ $allSubjects = $subjAll->fetchAll();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Results – Institute of Higher Technology</title>
+    <title>Manage Results – SLIATE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <style>
-        .btn svg { width: 18px; height: 18px; vertical-align: middle; margin-right: 5px; fill: currentColor; }
-        .icon-btn svg { width: 16px; height: 16px; vertical-align: middle; }
-    </style>
 </head>
 <body>
 <div class="d-flex">
     <?php include '../includes/admin_sidebar.php'; ?>
 
     <div class="main-content w-100">
-        <h2 class="mb-3">
-            <?= ($action === 'add' || $action === 'edit') ? ($action === 'add' ? 'Add Exam Result' : 'Edit Exam Result') : 'Exam Results' ?>
+        <h2>
+            <?= ($action === 'add' || $action === 'edit') ? ($action === 'add' ? '<i class="fas fa-plus-circle"></i> Add Exam Result' : '<i class="fas fa-edit"></i> Edit Exam Result') : '<i class="fas fa-clipboard-check"></i> Exam Results' ?>
         </h2>
 
         <?php if ($error): ?>
@@ -268,15 +265,14 @@ $allSubjects = $subjAll->fetchAll();
                     </div>
 
                     <button type="submit" name="save_result" class="btn btn-primary">
-                        <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
-                        <?= $editResult ? 'Update Result' : 'Add Result' ?>
+                        <i class="fas fa-save"></i> <?= $editResult ? 'Update Result' : 'Add Result' ?>
                     </button>
-                    <a href="results.php" class="btn btn-secondary" style="margin-left:10px;">Cancel</a>
+                    <a href="results.php" class="btn btn-outline" style="margin-left:10px;">Cancel</a>
                 </form>
             </div>
         <?php else: ?>
             <!-- ==================== FILTERS & LIST ==================== -->
-            <div class="filter-box mb-3">
+            <div class="filter-box mb-3" style="background:white; border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow);">
                 <form method="get" action="results.php" class="row g-2">
                     <div class="col-3 col-sm-12 mb-2">
                         <select name="filter_year" class="form-select">
@@ -304,18 +300,14 @@ $allSubjects = $subjAll->fetchAll();
                         </select>
                     </div>
                     <div class="col-2 col-sm-12 mb-2">
-                        <button type="submit" class="btn btn-outline-primary w-100">
-                            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg> Filter
-                        </button>
+                        <button type="submit" class="btn btn-outline w-100"><i class="fas fa-filter"></i> Filter</button>
                     </div>
                 </form>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-3" style="flex-wrap: wrap; gap: 10px;">
-                <a href="results.php?action=add" class="btn btn-primary">
-                    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Add Result
-                </a>
-                <a href="results.php" class="btn btn-outline-secondary">Clear Filters</a>
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <a href="results.php?action=add" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add Result</a>
+                <a href="results.php" class="btn btn-outline">Clear Filters</a>
             </div>
 
             <div class="table-container dashboard-card">
@@ -343,21 +335,17 @@ $allSubjects = $subjAll->fetchAll();
                                     <td><?= $r['academic_year'] ?></td>
                                     <td><?= $r['semester'] ?></td>
                                     <td><?= $r['marks'] ?></td>
-                                    <td><span class="badge badge-secondary"><?= $r['grade'] ?></span></td>
+                                    <td><span class="badge badge-primary"><?= $r['grade'] ?></span></td>
                                     <td>
                                         <?php if ($r['pass_fail'] == 'Pass'): ?>
-                                            <span class="badge badge-success">Pass</span>
+                                            <span class="badge pass-badge">Pass</span>
                                         <?php else: ?>
-                                            <span class="badge badge-danger">Fail</span>
+                                            <span class="badge fail-badge">Fail</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="text-center">
-                                        <a href="results.php?action=edit&id=<?= $r['result_id'] ?>" class="btn btn-sm btn-outline-info btn-action" title="Edit">
-                                            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                                        </a>
-                                        <a href="results.php?action=delete&id=<?= $r['result_id'] ?>" class="btn btn-sm btn-outline-danger btn-action confirm-delete" title="Delete">
-                                            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                                        </a>
+                                        <a href="results.php?action=edit&id=<?= $r['result_id'] ?>" class="btn btn-sm btn-outline" title="Edit"><i class="fas fa-edit"></i></a>
+                                        <a href="results.php?action=delete&id=<?= $r['result_id'] ?>" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete"><i class="fas fa-trash"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -371,12 +359,11 @@ $allSubjects = $subjAll->fetchAll();
     </div>
 </div>
 
-<!-- Dynamic subject loading (CLIENT SIDE) – corrected -->
+<!-- Dynamic subject loading (CLIENT SIDE) -->
 <script>
-// Pass PHP array to JavaScript
+// Store subjects data for filtering
 var allSubjectsData = <?= json_encode($allSubjects) ?>;
 
-// Run immediately – DOM is ready because script is at bottom of <body>
 (function() {
     const yearOfStudySelect = document.getElementById('year_of_study');
     const semSelect         = document.getElementById('semester');
@@ -384,30 +371,25 @@ var allSubjectsData = <?= json_encode($allSubjects) ?>;
 
     if (!yearOfStudySelect || !semSelect || !subjectDrop) return;
 
-    console.log('All subjects:', allSubjectsData);
-
     function filterSubjects() {
         const yearOfStudy = yearOfStudySelect.value;
         const sem = semSelect.value;
-        console.log('Filtering for Year:', yearOfStudy, 'Semester:', sem);
-
         subjectDrop.innerHTML = '<option value="">-- Select Subject --</option>';
         if (!yearOfStudy || !sem) return;
 
         const filtered = allSubjectsData.filter(function(subj) {
             return subj.year_of_study == yearOfStudy && subj.semester == sem;
         });
-        console.log('Filtered subjects:', filtered);
 
         filtered.forEach(function(subj) {
-            var opt = document.createElement('option');
+            const opt = document.createElement('option');
             opt.value = subj.subject_id;
             opt.textContent = subj.subject_code + ' - ' + subj.subject_name;
             subjectDrop.appendChild(opt);
         });
 
         if (filtered.length === 0) {
-            var opt = document.createElement('option');
+            const opt = document.createElement('option');
             opt.value = '';
             opt.textContent = 'No subjects found for this selection';
             opt.disabled = true;
@@ -418,7 +400,6 @@ var allSubjectsData = <?= json_encode($allSubjects) ?>;
     yearOfStudySelect.addEventListener('change', filterSubjects);
     semSelect.addEventListener('change', filterSubjects);
 
-    // If editing, pre‑filter immediately
     <?php if (isset($editResult)): ?>
         filterSubjects();
     <?php endif; ?>
